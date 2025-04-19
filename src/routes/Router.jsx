@@ -1,18 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
-import AddTask from "../pages/AddTask";
-import Tips from "../pages/Tips";
-import About from "../pages/About";
 
-const AppRouter = () => (
-    <Router>
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/add" element={<AddTask />} />
-            <Route path="/tips" element={<Tips />} />
-            <Route path="/about" element={<About />} />
-        </Routes>
-    </Router>
-);
+const AppRouter = () => {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                {/* More routes will be added here */}
+            </Routes>
+        </Router>
+    );
+};
 
 export default AppRouter;

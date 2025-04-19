@@ -1,11 +1,11 @@
-import AppRouter from "./routes/Router";
+import AppRouter from "./routes/Router.jsx"
 
 function App() {
     return (
-        <div className="font-sans bg-gray-100 min-h-screen">
+        <>
             <AppRouter />
-        </div>
-    );
+        </>
+    )
 }
 
-export default App;
+export default App
