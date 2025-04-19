@@ -1,0 +1,2 @@
+const About = () => <h1 className="text-3xl font-bold text-center mt-10">About DeadlineDen</h1>;
+export default About;
