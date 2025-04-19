@@ -20,5 +20,5 @@ const PanicMeter = ({ dueDate }) => {
         </div>
     )
 }
-
+ 
 export default PanicMeter;
