@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useTasks } from "../context/TaskContext"; // Make sure this path is correct
+import { useTasks } from "../context/TaskContext";
 
 const Tips = () => {
     const [tip, setTip] = useState("");
@@ -13,12 +13,22 @@ const Tips = () => {
 
         const key = import.meta.env.VITE_GEMINI_API_KEY;
 
+        // Add randomness to the prompt
+        const variations = [
+            "Make it calming and practical.",
+            "Keep it soothing and focus-driven.",
+            "Make it motivating and action-based.",
+            "Tailor it to overwhelmed students.",
+            "Make it gentle and time-based."
+        ];
+        const randomTone = variations[Math.floor(Math.random() * variations.length)];
+
         // Construct dynamic prompt
         const taskSummary = `I have ${tasks.length} tasks. ${
             tasks.filter(t => !t.completed).length
         } are incomplete. Types include: ${[...new Set(tasks.map(t => t.type))].join(", ")}.`;
 
-        const dynamicPrompt = `${taskSummary} Give me 1 short, calming productivity tip or planning strategy for a student managing these tasks. Keep it under 25 words.`;
+        const dynamicPrompt = `${taskSummary} ${randomTone} Give me 1 short productivity tip under 25 words.`;
 
         try {
             const response = await fetch(
@@ -60,7 +70,7 @@ const Tips = () => {
         >
             <h1 className="text-4xl font-bold text-gray-800 text-center mb-4">🧠 Productivity Tips</h1>
             <p className="text-gray-600 text-center max-w-lg mb-6">
-                Feeling stressed about deadlines? Tap the button below and let our AI drop some calming wisdom based on your tasks. ✨
+                Feeling stressed about deadlines? Tap the button below and let our AI drop some calming wisdom based on your tasks.
             </p>
 
             <motion.button

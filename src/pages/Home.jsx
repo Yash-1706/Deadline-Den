@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTasks } from "../context/TaskContext";
-import PanicMeter from "../components/PanicMeter.jsx";
 import TaskCard from "../components/TaskCard"; // Importing TaskCard
 
 const Home = () => {
@@ -19,10 +18,12 @@ const Home = () => {
         }
     };
 
+    const allDone = tasks.length > 0 && tasks.every(t => t.completed);
+
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             className="min-h-screen bg-[#fffef9] flex flex-col items-center justify-center p-6"
         >
@@ -33,7 +34,7 @@ const Home = () => {
                 transition={{ delay: 0.3, duration: 0.6 }}
                 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4"
             >
-                DeadlineDen: Academic Planner
+                🎯 Stay Ahead with DeadlineDen
             </motion.h1>
 
             <motion.p
@@ -42,7 +43,9 @@ const Home = () => {
                 transition={{ delay: 0.6, duration: 0.5 }}
                 className="text-lg text-gray-600 text-center mb-8 max-w-xl"
             >
-                Stay ahead of your academic deadlines with a clear plan and a panic meter 🤯✨
+                {allDone
+                    ? "✅ You’ve completed all tasks. Go reward yourself! 🍦"
+                    : "Plan wisely. The panic meter watches all... 👀"}
             </motion.p>
 
             {/* Filter Buttons */}
@@ -68,26 +71,49 @@ const Home = () => {
                 ))}
             </div>
 
-            {/* Task List */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 }}
-                className="w-full max-w-xl"
-            >
-                {filteredTasks.length === 0 ? (
-                    <p className="text-center text-gray-500">No tasks found for this filter 💤</p>
-                ) : (
-                    <div className="space-y-4">
-                        {filteredTasks.map((task) => (
-                            <TaskCard key={task.id} task={task} toggleComplete={toggleComplete} handleEdit={handleEdit} />
-                        ))}
-                    </div>
-                )}
-            </motion.div>
+            {/* No tasks message */}
+            {filteredTasks.length === 0 ? (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-center mt-16 text-gray-500"
+                >
+                    <p className="text-xl">📭 No tasks yet!</p>
+                    <p className="text-sm mt-2">Click ➕ Add Task to get started.</p>
+                </motion.div>
+            ) : (
+                <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                        hidden: {},
+                        visible: {
+                            transition: {
+                                staggerChildren: 0.1
+                            }
+                        }
+                    }}
+                    className="w-full max-w-xl space-y-4"
+                >
+                    {filteredTasks.map((task) => (
+                        <motion.div
+                            key={task.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <TaskCard
+                                task={task}
+                                toggleComplete={toggleComplete}
+                                handleEdit={handleEdit}
+                            />
+                        </motion.div>
+                    ))}
+                </motion.div>
+            )}
         </motion.div>
     );
 };
 
 export default Home;
-
