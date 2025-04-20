@@ -3,7 +3,9 @@ import { NavLink } from "react-router-dom";
 const Navbar = () => {
     const linkClass = ({ isActive }) =>
         `px-4 py-2 rounded-xl transition ${
-            isActive ? "bg-orange-400 text-white" : "text-gray-600 hover:bg-gray-100"
+            isActive
+                ? "bg-orange-400 text-white"
+                : "text-gray-600 hover:bg-gray-100"
         }`;
 
     return (
@@ -14,7 +16,7 @@ const Navbar = () => {
                     <NavLink to="/" className={linkClass}>🏠 Home</NavLink>
                     <NavLink to="/add" className={linkClass}>➕ Add Task</NavLink>
                     <NavLink to="/tips" className={linkClass}>🧠 Tips</NavLink>
-                    <NavLink to="/about" className={linkClass}>ℹ About</NavLink>
+                    <NavLink to="/about" className={linkClass}>ℹ️ About</NavLink>
                 </div>
             </div>
         </nav>

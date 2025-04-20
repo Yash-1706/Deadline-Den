@@ -1,0 +1,14 @@
+import AppRouter from "./routes/Router.jsx"
+import Navbar from "./components/Navbar.jsx";
+
+function App() {
+    return (
+        <div>
+
+        </div>
+    <Navbar />
+    <AppRouter />
+)
+}
+
+export default App
