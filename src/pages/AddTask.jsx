@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTasks } from "../context/TaskContext";
 import { motion } from "framer-motion";
 
 const Add = () => {
@@ -6,29 +8,25 @@ const Add = () => {
     const [type, setType] = useState("Assignment");
     const [dueDate, setDueDate] = useState("");
 
+    const { addTask } = useTasks();
+    const navigate = useNavigate();
+
     const handleAddTask = () => {
         if (!title || !dueDate) {
             alert("Please fill in all fields.");
             return;
         }
 
-        const newTask = {
-            id: Date.now(),
-            title,
-            type,
-            dueDate,
-        };
+        // Using context to add task
+        addTask({ title, type, dueDate });
 
-        // Save to localStorage
-        const existingTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-        localStorage.setItem("tasks", JSON.stringify([...existingTasks, newTask]));
-
-        // Reset inputs
+        // Reset form fields
         setTitle("");
         setType("Assignment");
         setDueDate("");
 
         alert("✅ Task added!");
+        navigate("/"); // Redirect to home
     };
 
     return (

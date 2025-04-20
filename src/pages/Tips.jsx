@@ -34,9 +34,7 @@ const Tips = () => {
             );
 
             const data = await response.json();
-            console.log("Gemini response: ", data)
             const output = data.candidates?.[0]?.content?.parts?.[0]?.text;
-            console.log("Extracted output: ", output);
             setTip(output || "🤔 No tip received. Try again?");
         } catch (error) {
             console.error("Gemini error:", error);

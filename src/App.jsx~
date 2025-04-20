@@ -1,14 +1,36 @@
-import AppRouter from "./routes/Router.jsx"
-import Navbar from "./components/Navbar.jsx";
+import { useState } from "react";
+import { useNavigate} from "react-router-dom";
+import { useTasks } from "./context/TaskContext";
+import AppRouter from "./routes/Router";
+import Navbar from "./components/Navbar";
 
 function App() {
-    return (
-        <div>
+    const Add = () => {
+        const [title, setTitle] = useState("");
+        const [type, setType] = useState("Assignment");
+        const [dueDate, setDueDate] = useState("");
+        const { addTask } = useTasks();
+        const navigate = useNavigate();
 
+        const handleAddTask = () => {
+            if (!title || !dueDate) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            addTask({ title, type, dueDate });
+            alert("✅ Task added!");
+            navigate("/"); // Redirect to home
+        };
+
+    };
+
+    return (
+        <div className="font-sans bg-[#fffef9] min-h-screen">
+            <Navbar />
+            <AppRouter />
         </div>
-    <Navbar />
-    <AppRouter />
-)
+    );
 }
 
-export default App
+export default App;
