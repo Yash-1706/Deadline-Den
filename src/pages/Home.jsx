@@ -2,14 +2,22 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTasks } from "../context/TaskContext";
 import PanicMeter from "../components/PanicMeter.jsx";
+import TaskCard from "../components/TaskCard"; // Importing TaskCard
 
 const Home = () => {
-    const { tasks } = useTasks(); // use context for tasks
+    const { tasks, updateTask, toggleComplete } = useTasks();
     const [filterType, setFilterType] = useState("all");
 
     const filteredTasks = tasks.filter(
         (task) => filterType === "all" || task.type.toLowerCase() === filterType
     );
+
+    const handleEdit = (task) => {
+        const newTitle = prompt("Edit task title:", task.title);
+        if (newTitle && newTitle !== task.title) {
+            updateTask(task.id, { title: newTitle });
+        }
+    };
 
     return (
         <motion.div
@@ -70,30 +78,11 @@ const Home = () => {
                 {filteredTasks.length === 0 ? (
                     <p className="text-center text-gray-500">No tasks found for this filter 💤</p>
                 ) : (
-                    <ul className="space-y-4">
+                    <div className="space-y-4">
                         {filteredTasks.map((task) => (
-                            <motion.li
-                                key={task.id}
-                                initial={{ x: -20, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                transition={{ duration: 0.3 }}
-                                className="bg-white border border-gray-200 rounded-xl px-4 py-3 shadow"
-                            >
-                                <div className="flex justify-between items-center">
-                                    <span className="text-gray-800 font-medium">
-                                        {task.title}{" "}
-                                        <span className="ml-2 text-sm text-gray-500">
-                                            ({task.type})
-                                        </span>
-                                    </span>
-                                    <span className="text-xs text-gray-400">
-                                        Due: {new Date(task.dueDate).toLocaleDateString()}
-                                    </span>
-                                </div>
-                                <PanicMeter dueDate={task.dueDate} />
-                            </motion.li>
+                            <TaskCard key={task.id} task={task} toggleComplete={toggleComplete} handleEdit={handleEdit} />
                         ))}
-                    </ul>
+                    </div>
                 )}
             </motion.div>
         </motion.div>
@@ -101,3 +90,4 @@ const Home = () => {
 };
 
 export default Home;
+

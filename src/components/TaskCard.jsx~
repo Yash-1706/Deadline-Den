@@ -2,6 +2,17 @@ import { useState } from "react";
 import { useTasks } from "../context/TaskContext";
 import { motion } from "framer-motion";
 
+// Urgency label logic
+const getUrgency = (dueDate) => {
+    const now = new Date();
+    const due = new Date(dueDate);
+    const diff = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
+
+    if (diff <= 1) return { label: "🔥 Urgent", color: "bg-red-500" };
+    if (diff <= 3) return { label: "⚠️ Soon", color: "bg-yellow-400" };
+    return { label: "😌 Chill", color: "bg-green-400" };
+};
+
 // Panic level for progress bar
 const getPanicLevel = (dueDate) => {
     const now = new Date();
@@ -19,8 +30,8 @@ const getPanicLevel = (dueDate) => {
     return { percent, color };
 };
 
-const TaskCard = ({ task, toggleComplete, handleEdit }) => {
-    const { updateTask, deleteTask } = useTasks();
+const TaskCard = ({ task }) => {
+    const { updateTask, deleteTask, toggleComplete } = useTasks();
     const [isEditing, setIsEditing] = useState(false);
     const [form, setForm] = useState({
         title: task.title,
@@ -39,6 +50,7 @@ const TaskCard = ({ task, toggleComplete, handleEdit }) => {
         setIsEditing(false);
     };
 
+    const urgency = getUrgency(task.dueDate);
     const panic = getPanicLevel(task.dueDate);
 
     return (
@@ -89,17 +101,17 @@ const TaskCard = ({ task, toggleComplete, handleEdit }) => {
                             <p className="text-sm text-gray-500">
                                 {task.type} — Due: {task.dueDate}
                             </p>
-                            {/* Panic Meter Bar */}
-                            <div className="mt-3 w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div
-                                    className={`h-full transition-all duration-500 ${panic.color}`}
-                                    style={{ width: `${panic.percent}%` }}
-                                ></div>
+                            <div
+                                className={`inline-block px-2 py-1 text-xs font-semibold text-white rounded-full ${urgency.color} mt-1`}
+                            >
+                                {urgency.label}
                             </div>
-                            {/* Panic Meter Percentage */}
-                            <p className="text-xs text-gray-500 mt-1">
-                                Panic Meter: {Math.round(panic.percent)}%
-                            </p>
+                            <div className="mt-2 h-2 rounded-full bg-gray-200 overflow-hidden">
+                                <div
+                                    className={`${panic.color} h-full`}
+                                    style={{ width: `${panic.percent}%` }}
+                                />
+                            </div>
                         </div>
                     )}
                 </div>

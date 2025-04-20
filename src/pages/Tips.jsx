@@ -1,15 +1,24 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTasks } from "../context/TaskContext"; // Make sure this path is correct
 
 const Tips = () => {
     const [tip, setTip] = useState("");
     const [loading, setLoading] = useState(false);
+    const { tasks } = useTasks();
 
     const handleGetTip = async () => {
         setLoading(true);
         setTip("");
 
         const key = import.meta.env.VITE_GEMINI_API_KEY;
+
+        // Construct dynamic prompt
+        const taskSummary = `I have ${tasks.length} tasks. ${
+            tasks.filter(t => !t.completed).length
+        } are incomplete. Types include: ${[...new Set(tasks.map(t => t.type))].join(", ")}.`;
+
+        const dynamicPrompt = `${taskSummary} Give me 1 short, calming productivity tip or planning strategy for a student managing these tasks. Keep it under 25 words.`;
 
         try {
             const response = await fetch(
@@ -23,9 +32,7 @@ const Tips = () => {
                         contents: [
                             {
                                 parts: [
-                                    {
-                                        text: "Give me one calming time-management or productivity tip for students facing academic deadlines."
-                                    }
+                                    { text: dynamicPrompt }
                                 ]
                             }
                         ]
@@ -53,7 +60,7 @@ const Tips = () => {
         >
             <h1 className="text-4xl font-bold text-gray-800 text-center mb-4">🧠 Productivity Tips</h1>
             <p className="text-gray-600 text-center max-w-lg mb-6">
-                Feeling stressed about deadlines? Tap the button below and let our AI drop some calming wisdom. ✨
+                Feeling stressed about deadlines? Tap the button below and let our AI drop some calming wisdom based on your tasks. ✨
             </p>
 
             <motion.button
